@@ -1,14 +1,53 @@
-audit RDS
-============================
-This stack will monitor RDS and alert on things CloudCoreo developers think are violations of best practices
+cloudcoreo-kubernetes-node-cluster
+===================================
+
 
 
 ## Description
-This repo is designed to work with CloudCoreo. It will monitor RDS against best practices for you and send a report to the email address designated by the config.yaml AUDIT&#95;AWS&#95;RDS&#95;ALERT&#95;RECIPIENT value
+This repository is the [CloudCoreo](https://www.cloudcoreo.com) stack for kubernetes node clusters.
+
+This stack will add a scalable, highly availabe, self healing kubernetes node cluster based on the [CloudCoreo leader election cluster here](http://hub.cloudcoreo.com/stack/leader-elect-cluster_35519).
+
+Kubernetes allows you to manage a cluster of Linux containers as a single system to accelerate Dev and simplify Ops. The architecture is such that master and node clusters are both required. This is only the cluster for the nodes and expects a master cluster available [here](http://hub.cloudcoreo.com/stack/cloudcoreo-kubernetes-master-cluster_39a3c).
+
+The node cluster is quite interesting in the way it works with the master cluster. There is a bit of work necessary in order to get routing working. Each node must have its own route entry in the route tables for the VPC in which it is containted. As a user of this cluster, you must specify the master service cidr, but you must ALSO specify the cidr block size which will be used to subdivide the master range amongst the nodes.
+
+For instance:
+
+Lets assume you set the `KUBE&#95;NODE&#95;SERVICE&#95;IP&#95;CIDRS` variable to `10.234.0.0/20`. 
+Your job is to decide how many (maximum) containers you want to run simultaneously on each node. 
+For this, lets decide on `62` as the maximum. Great! That just happens to mean you put in a value for `KUBE&#95;NODE&#95;SERVICE&#95;IP&#95;CIDRS&#95;SUBDIVIDER` that gets you 64 addresses (62 usable, 1 for the broadcast and one for network address). That value is `26`.
+
+```
+KUBE&#95;NODE&#95;SERVICE&#95;IP&#95;CIDRS = 10.234.0.0/20
+KUBE&#95;NODE&#95;SERVICE&#95;IP&#95;CIDRS&#95;SUBDIVIDER = 25
+```
+
+So what happens now?
+
+As nodes come up they create a table of usable values based on the two variables above. In our case there are 32 possible cidrs:
+```
+10.234.0.0/26
+10.234.0.64/26
+10.234.1.0/26
+10.234.1.64/26
+10.234.2.0/26
+10.234.2.64/26
+...
+...
+10.234.13.0/26
+10.234.13.64/26
+10.234.14.0/26
+10.234.14.64/26
+10.234.15.0/26
+10.234.15.64/26
+```
+Each node will check the kubernets nodes via kubectl command and find an unused network block. It will then insert itself into the proper routing tables. The 'used network blocks' are determined by the labels set on the nodes.
+
 
 
 ## Hierarchy
-![composite inheritance hierarchy](https://raw.githubusercontent.com/CloudCoreo/STACK/master/images/hierarchy.png "composite inheritance hierarchy")
+![composite inheritance hierarchy](https://raw.githubusercontent.com/CloudCoreo/cloudcoreo-kubernetes-node-cluster/master/images/hierarchy.png "composite inheritance hierarchy")
 
 
 
@@ -151,18 +190,20 @@ This repo is designed to work with CloudCoreo. It will monitor RDS against best 
   * description: leave this blank - we are using ELB for health checks only
 
 ## Tags
-1. Audit
-1. Best Practices
-1. Alert
-1. RDS
+1. Container Management
+1. Google
+1. Kubernetes
+1. High Availability
+1. Master
+1. Cluster
 
 ## Categories
-1. Audit
+1. Servers
 
 
 
 ## Diagram
-![diagram](https://raw.githubusercontent.com/CloudCoreo/STACK/master/images/diagram.png "diagram")
+![diagram](https://raw.githubusercontent.com/CloudCoreo/cloudcoreo-kubernetes-node-cluster/master/images/diagram.png "diagram")
 
 
 ## Icon
