@@ -6,9 +6,9 @@ cloudcoreo-kubernetes-node-cluster
 ## Description
 This repository is the [CloudCoreo](https://www.cloudcoreo.com) stack for kubernetes node clusters.
 
-This stack will add a scalable, highly availabe, self healing kubernetes node cluster based on the [CloudCoreo leader election cluster here](http://hub.cloudcoreo.com/stack/leader-elect-cluster_35519).
+This stack will add a scalable, highly availabe, self healing kubernetes node cluster based on the [CloudCoreo leader election cluster here](http://hub.cloudcoreo.com/stack/leader-elect-cluster&#95;35519).
 
-Kubernetes allows you to manage a cluster of Linux containers as a single system to accelerate Dev and simplify Ops. The architecture is such that master and node clusters are both required. This is only the cluster for the nodes and expects a master cluster available [here](http://hub.cloudcoreo.com/stack/cloudcoreo-kubernetes-master-cluster_39a3c).
+Kubernetes allows you to manage a cluster of Linux containers as a single system to accelerate Dev and simplify Ops. The architecture is such that master and node clusters are both required. This is only the cluster for the nodes and expects a master cluster available [here](http://hub.cloudcoreo.com/stack/cloudcoreo-kubernetes-master-cluster&#95;39a3c).
 
 The node cluster is quite interesting in the way it works with the master cluster. There is a bit of work necessary in order to get routing working. Each node must have its own route entry in the route tables for the VPC in which it is containted. As a user of this cluster, you must specify the master service cidr, but you must ALSO specify the cidr block size which will be used to subdivide the master range amongst the nodes.
 
@@ -144,7 +144,7 @@ Each node will check the kubernets nodes via kubectl command and find an unused 
   * default: cloudops
 
 
-## Optional variables with no default
+## Optional variables with default
 
 ### `KUBE_PROXY_LOG_FILE`:
   * description: kube proxy log file
@@ -172,7 +172,7 @@ Each node will check the kubernets nodes via kubectl command and find an unused 
 ```
 
 
-## Optional variables with default
+## Optional variables with no default
 
 ### `VPC_SEARCH_TAGS`:
   * description: if you have more than one VPC with the same CIDR, and it is not under CloudCoreo control, we need a way to find it. Enter some unique tags that exist on the VPC you want us to find. ['env=production','Name=prod-vpc']
