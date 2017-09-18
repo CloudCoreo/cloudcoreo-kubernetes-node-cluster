@@ -21,6 +21,7 @@ kube_dir="/opt/kubernetes"
     cd "$kube_dir"
 
     name="$(echo $MY_IPADDRESS | perl -pe 's{\.}{}g')"
+    name="$MY_IPADDRESS"
 
     nohup ./kube-proxy \
 	--master=http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080 \
