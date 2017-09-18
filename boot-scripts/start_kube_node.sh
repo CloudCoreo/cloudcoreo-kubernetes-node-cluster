@@ -20,6 +20,8 @@ kube_dir="/opt/kubernetes"
 (
     cd "$kube_dir"
 
+    name="$(echo $MY_IPADDRESS | perl -pe 's{\.}{}g')"
+
     nohup ./kube-proxy \
 	--master=http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080 \
 	--v=2 \
@@ -28,7 +30,7 @@ kube_dir="/opt/kubernetes"
     # Use KUBELET_OPTS to modify the start/restart options
     nohup ./kubelet --address=$MY_IPADDRESS \
 	--port=10250 \
-	--hostname_override=$MY_IPADDRESS \
+	--hostname_override=$name \
 	--api_servers=http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080 \
 	--v=2 \
 	2>&1 >> ${KUBE_KUBLET_LOG_FILE} &
