@@ -50,3 +50,20 @@ coreo_aws_iam_policy "${KUBE_NODE_NAME}" do
 }
 EOH
 end
+
+coreo_aws_ec2_instance "${KUBE_NODE_NAME}" do
+  action :define
+  image_id "${KUBE_CLUSTER_AMI}"
+  size "${KUBE_NODE_SIZE}"
+  security_groups ["${KUBE_NODE_NAME}"]
+  role "${KUBE_NODE_NAME}"
+  ssh_key "${KUBE_NODE_KEY}"
+  disks [
+         {
+           :device_name => "/dev/xvda",
+           :volume_size => 500,
+           :volume_type => 'io1',
+           :iops => 3500
+         }
+        ]
+end
