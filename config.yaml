@@ -1,7 +1,7 @@
 variables:
     KUBE_VERSION:
         description: kubernetes version
-        type: String
+        type: string
         required: true
         default: 1.7.6
     KUBE_PROXY_LOG_FILE:
@@ -14,15 +14,15 @@ variables:
         default: /var/log/kube-kublet.log
     VPC_SEARCH_TAGS:
         description: if you have more than one VPC with the same CIDR, and it is not under CloudCoreo control, we need a way to find it. Enter some unique tags that exist on the VPC you want us to find. ['env=production','Name=prod-vpc']
-        type: Array
+        type: array
         required: false
     PRIVATE_ROUTE_SEARCH_TAGS:
         description: if you more than one route table or set of route tables, and it is not under CloudCoreo control, we need a way to find it. Enter some unique tags that exist on your route tables you want us to find. i.e. ['Name=my-private-routetable','env=dev']
-        type: Array
+        type: array
         required: false
     PRIVATE_SUBNET_SEARCH_TAGS:
         description: Usually the private-routetable association is enough for us to find the subnets you need, but if you have more than one subnet, we may need a way to find them. unique tags is a great way. enter them there. i.e. ['Name=my-private-subnet']
-        type: Array
+        type: array
         required: false
     VPC_NAME:
         required: true
@@ -30,7 +30,7 @@ variables:
         default: kube-dev
     VPC_CIDR:
         description: the cloudcoreo defined vpc to add this cluster to
-        type: String
+        type: string
         required: true
         default: 10.1.0.0/16
     PRIVATE_SUBNET_NAME:
@@ -38,15 +38,15 @@ variables:
         required: true
         descripiton: the name of the private subnet
         description: the cloudcoreo name of the private vpc subnets. eg private-us-west-2c
-        type: String
+        type: string
     PRIVATE_ROUTE_NAME:
         description: the private subnet in which the cluster should be added
-        type: String
+        type: string
         required: true
         default: dev-private-route
     DNS_ZONE:
         description: the zone in which the internal elb dns entry should be maintained
-        type: String
+        type: string
         required: true
         default: dev.aws.lcloud.com
     KUBE_CLUSTER_AMI:
@@ -78,26 +78,26 @@ variables:
     KUBE_MASTER_NAME:
         default: kube-master
         description: the name of the cluster - this will become your dns record too
-        type: String
+        type: string
         required: true
     KUBE_NODE_NAME:
         default: kube-node
         description: the name of the cluster - this will become your dns record too
-        type: String
+        type: string
         required: true
         overrides:
           - CLUSTER_NAME
     KUBE_NODE_ELB_TRAFFIC_PORTS:
         default:
         description: leave this blank - we are using ELB for health checks only
-        type: Array
+        type: array
         required: false
         overrides:
           - CLUSTER_ELB_TRAFFIC_PORTS
     KUBE_NODE_ELB_TRAFFIC_CIDRS:
         default: 
         description: leave this blank - we are using ELB for health checks only
-        type: Array
+        type: array
         required: false
         overrides:
           - CLUSTER_ELB_TRAFFIC_CIDRS
@@ -112,7 +112,7 @@ variables:
         default:
             - 1..65535
         description: ports to allow traffic on directly to the instances
-        type: Array
+        type: array
         required: true
         overrides:
           - CLUSTER_INSTANCE_TRAFFIC_PORTS
@@ -120,7 +120,7 @@ variables:
         default:
             - 10.0.0.0/8
         description: cidrs that are allowed to access the instances directly
-        type: Array
+        type: array
         required: true
         overrides:
           - CLUSTER_INSTANCE_TRAFFIC_CIDRS
