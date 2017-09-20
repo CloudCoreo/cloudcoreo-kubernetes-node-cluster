@@ -165,7 +165,7 @@ if options.version:
 
 EC2 = boto.ec2.connect_to_region(getRegion())
 VPC = boto.vpc.connect_to_region(getRegion())
-AUTOSCALE = boto3.client('autoscale', region_name=getRegion())
+AUTOSCALE = boto3.client('autoscaling', region_name=getRegion())
 
 disableSourceDestChecks()
 main()
