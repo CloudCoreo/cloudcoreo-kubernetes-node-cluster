@@ -5,6 +5,7 @@
 # Author(s):
 #   - Paul Allen (paul@cloudcoreo.com)
 import boto
+import boto3
 import boto.ec2
 import boto.ec2.autoscale
 from boto.exception import EC2ResponseError
@@ -111,8 +112,11 @@ def getMyASGSubnets():
     global MY_ASG_SUBNETS
     if MY_ASG_SUBNETS == None:
         MY_ASG_SUBNETS = []
-        log("AUTOSCALE.get_all_groups -> %s" % AUTOSCALE.get_all_groups())
-        for subnetId in AUTOSCALE.get_all_groups([getMyAsgName()])[0].vpc_zone_identifier.split(","):
+        log(AUTOSCALE.describe_auto_scaling_groups(AutoScalingGroupNames=[getMyAsgName()]))
+        myGroup = AUTOSCALE.describe_auto_scaling_groups(AutoScalingGroupNames=[getMyAsgName()])['AutoScalingGroups'][0]
+        log("myGroup: %s" % myGroup['VPCZoneIdentifier'])
+        for subnetId in myGroup['VPCZoneIdentifier'].split(","):
+
             log("  subnetId: %s" % subnetId)
             MY_ASG_SUBNETS.append(getSubnetById(subnetId))
     return MY_ASG_SUBNETS
@@ -161,7 +165,7 @@ if options.version:
 
 EC2 = boto.ec2.connect_to_region(getRegion())
 VPC = boto.vpc.connect_to_region(getRegion())
-AUTOSCALE = boto.ec2.autoscale.connect_to_region(getRegion())
+AUTOSCALE = boto3.client('autoscale', region_name=getRegion())
 
 disableSourceDestChecks()
 main()
