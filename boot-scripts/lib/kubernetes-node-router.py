@@ -111,7 +111,7 @@ def getMyASGSubnets():
     global MY_ASG_SUBNETS
     if MY_ASG_SUBNETS == None:
         MY_ASG_SUBNETS = []
-        log("AUTOSCALE.get_all_groups -> %s" %s AUTOSCALE.get_all_groups())
+        log("AUTOSCALE.get_all_groups -> %s" % AUTOSCALE.get_all_groups())
         for subnetId in AUTOSCALE.get_all_groups([getMyAsgName()])[0].vpc_zone_identifier.split(","):
             log("  subnetId: %s" % subnetId)
             MY_ASG_SUBNETS.append(getSubnetById(subnetId))
