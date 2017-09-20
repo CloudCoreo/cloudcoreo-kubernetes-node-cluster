@@ -63,29 +63,34 @@ def getAvailabilityZone():
     global MY_AZ
     if MY_AZ is None:
         MY_AZ = metaData("placement/availability-zone")
+    log("MY_AZ set to %s" % MY_AZ)
     return MY_AZ
 
 def getRegion():
-  return getAvailabilityZone()[:-1]
+  myRegion = getAvailabilityZone()[:-1]
+  log("region: %s" % myRegion)
+  return myRegion
 
 def getInstanceId():
     ## cached
     global INSTANCE_ID
     if INSTANCE_ID == None:
         INSTANCE_ID = metaData("instance-id")
+    log("INSTANCE_ID: %s" % INSTANCE_ID)
     return INSTANCE_ID
 
 def getSubnetById(subnetid):
     ## cached
     subnet_filters = [['subnet-id', subnetid]]
     subnet = VPC.get_all_subnets(filters=subnet_filters)[0]
-    log('got a subnet: %s' % subnet.id)
+    log('my subnet: %s' % subnet.id)
     return subnet
 
 def getMyVPCId():
     global MY_VPC_ID
     if MY_VPC_ID == None:
         MY_VPC_ID = getMe().vpc_id
+    log("MY_VPC_ID: %s" % MY_VPC_ID)
     return MY_VPC_ID
 
 def getMySubnets():
@@ -93,6 +98,7 @@ def getMySubnets():
     if MY_SUBNETS == None:
         az_subnet_filters = [['availability-zone', getAvailabilityZone()],['vpc-id', getMyVPCId()]]
         MY_SUBNETS = VPC.get_all_subnets(filters=az_subnet_filters)
+    log("MY_SUBNETS: %s" % MY_SUBNETS)
     return MY_SUBNETS
 
 def getMyAsgName():
@@ -105,17 +111,23 @@ def getMyASGSubnets():
     global MY_ASG_SUBNETS
     if MY_ASG_SUBNETS == None:
         MY_ASG_SUBNETS = []
+        log("AUTOSCALE.get_all_groups -> %s" %s AUTOSCALE.get_all_groups())
         for subnetId in AUTOSCALE.get_all_groups([getMyAsgName()])[0].vpc_zone_identifier.split(","):
+            log("  subnetId: %s" % subnetId)
             MY_ASG_SUBNETS.append(getSubnetById(subnetId))
     return MY_ASG_SUBNETS
 
 def getMyRouteTables(subnet):
     ## this cannot be cached beacuse we need to keep checking the route tables
     rt_filters = [['vpc-id', getMyVPCId()], ['association.subnet-id', subnet.id]]
-    return VPC.get_all_route_tables(filters=rt_filters)
+    myRouteTables = VPC.get_all_route_tables(filters=rt_filters)
+    log("myRouteTables: %s" % myRouteTables)
+    return myRouteTables
 
 def getMe():
-    return EC2.get_only_instances(instance_ids=[getInstanceId()])[0]
+    me = EC2.get_only_instances(instance_ids=[getInstanceId()])[0]
+    log("me: %s" % me)
+    return me
 
 def disableSourceDestChecks():
     EC2.modify_instance_attribute(getInstanceId(), "sourceDestCheck", False)
