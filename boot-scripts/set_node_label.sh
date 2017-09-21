@@ -2,7 +2,7 @@
 
 source /etc/profile.d/cluster
 ( 
-    name="$(echo $MY_IPADDRESS | perl -pe 's{\.}{}g')"
+    name="$MY_IPADDRESS"
 
     bip="$(cat /etc/sysconfig/docker | grep dockernet | awk -F'dockernet=' '{print $2}' | awk -F'/' '{print $1}')"
     cd /opt/kubernetes

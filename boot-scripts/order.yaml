@@ -10,5 +10,6 @@ script-order:
   - install_docker.sh
   - start_docker.sh
   - start_kube_node.sh
+  - set_node_label.sh
   - update_route_tables.sh
   - delete_old_nodes.sh

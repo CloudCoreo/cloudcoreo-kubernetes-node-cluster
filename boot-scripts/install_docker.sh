@@ -23,7 +23,7 @@ done
 (
     kube_dir="/opt/kubernetes"
     cd "$kube_dir"
-    used_nets="$(./kubectl --server=http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080 get nodes | grep -i \\bready\\b | grep ipblock | awk -F'ipblock=' '{print $2}' | perl -pe 's#([0-9\.]+).*#\1#g')"
+    used_nets="$(./kubectl --server=http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080 get nodes --show-labels=true | grep -i \\bready\\b | grep ipblock | awk -F'ipblock=' '{print $2}' | perl -pe 's#([0-9\.]+).*#\1#g')"
 
     DOCKER_BIP=
     net_counter=1
