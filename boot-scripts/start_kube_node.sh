@@ -23,8 +23,9 @@ sup_conf="/etc/supervisord.conf"
 
     name="$(echo $MY_IPADDRESS | perl -pe 's{\.}{}g')"
     name="$MY_IPADDRESS"
-
-    cat <<EOF >> "$sup_conf"
+    
+    if ! cat "$sup_conf" | grep -q "program:kube-proxy"; then
+	cat <<EOF >> "$sup_conf"
 
 [program:kube-proxy]
 redirect_stderr=true
@@ -34,6 +35,11 @@ command=/bin/bash -c '$kube_dir/kube-proxy \\
                         --v=2 \\
                         --master="http://${KUBE_MASTER_NAME}.${DNS_ZONE}:8080" \\
                         '
+EOF
+    fi
+
+    if ! cat "$sup_conf" | grep -q "program:kublet"; then
+	cat <<EOF >> "$sup_conf"
 
 [program:kublet]
 redirect_stderr=true
@@ -48,5 +54,6 @@ command=/bin/bash -c '$kube_dir/kubelet \\
                         '
 
 EOF
+    fi
     supervisord
 )
