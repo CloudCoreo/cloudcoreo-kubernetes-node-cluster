@@ -48,5 +48,5 @@ command=/bin/bash -c '$kube_dir/kubelet \\
                         '
 
 EOF
-    /etc/init.d/supervisord restart
+    supervisord
 )
