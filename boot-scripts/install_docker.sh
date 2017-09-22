@@ -57,7 +57,12 @@ done
     baseaddr="$(echo $DOCKER_BIP | cut -d. -f1-3)"
     lsv="$(echo $DOCKER_BIP | cut -d. -f4)"
     docker_bind="$baseaddr.$((lsv + 1))"
-
+    mkdir -p /etc/docker
+    cat <<EOF > /etc/docker/daemon.json
+{
+  "storage-driver": "devicemapper"
+}
+EOF
     ## docker config  
     cat <<EOF > /etc/sysconfig/docker
 # The max number of open files for the daemon itself, and all
